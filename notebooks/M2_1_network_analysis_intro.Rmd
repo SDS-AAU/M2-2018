@@ -62,6 +62,8 @@ rm(list.of.packages, new.packages)
 
 # Introduction
 
+Welcome to Module 2. This script is available as R-notebook (pretty) as well as executable jupyter notebook on kaggle [here](https://kaggle.com/danielhain/sds-2018-m2-1-intro-nw). HAve fun!
+
 ## Networks... So what?
 So, before we talk about networks, one thing upfront... why should we? I mean, they undeniably look pretty, don't they?
 
@@ -72,7 +74,6 @@ Somehow, the visualization of networks fascinates the human mind (find a short T
 Yet, besides that, is there an analytical value for a data scientist to bother about networks?
 
 ![](../media/M2_1_google_apple.png){width=750px}
-
 
 ## Networks in R
 There are a number of applications designed for network analysis and the creation of network graphs such as [gephi](https://gephi.org) and [cytoscape](http://cytoscape.org). Though not specifically designed for it, R has developed into a powerful tool for network analysis. 
@@ -235,17 +236,16 @@ V(g)$name
 
 # Networks are coming...
 
+![](../media/M2_1_got.jpg){width=500px}
+
+So, lets get serious. Appropriate for the weather these days in Denmark, the theme is "winter is comming...". Therefore, we will have some fun analysing the Game of Thrones data provided by [Andrew Beveridge](https://github.com/mathbeveridge/asoiaf). It is a Character Interaction Networks for George R. R. Martin's "A Song of Ice and Fire" saga (yes, we are talking about the books...). These networks were created by connecting two characters whenever their names (or nicknames) appeared within 15 words of one another in one of the books in "A Song of Ice and Fire." The edge weight corresponds to the number of interactions. THis is a nice skill you will have afeter the second part of M2 on your own.
+
 ## Build the graph
 
-```{r}
-rm(list=ls())
-
-files <- list.files(path ="../data/GoT/", full.names = TRUE)
-files
-```
 
 ```{r}
-edges.cooc.all <- fread(files[1], data.table = FALSE) 
+edges.cooc.all <- fread("../input/GoT/asoiaf-all-edges.csv", data.table = FALSE) 
+nodes.cooc.all <- fread("../input/GoT/asoiaf-all-nodes.csv", data.table = FALSE) 
 head(edges.cooc.all)
 ```
 
@@ -257,6 +257,7 @@ edges.cooc.all %<>%
   mutate(source = gsub("-", " ", source),
          target = gsub("-", " ", target)) 
 ```
+
 Ok, lets see how many characters we have overal.
 
 ```{r}
@@ -266,7 +267,7 @@ edges.cooc.all %>%
   n_distinct(.$name)
 ```
 
-
+That's a lot. We might want to restrict ourselfes first to a small set of the 50 most connected nodes.
 
 ```{r}
 chars.main <- edges.cooc.all %>%
@@ -281,9 +282,7 @@ chars.main <- edges.cooc.all %>%
 head(chars.main)
 ```
 
-So far so good, if we only go by edge weights, Tyrion is going to make it.... my favorite anyhow...
-
-However, lets reduce our edgelist to this main characters, just to warm up and keep the overview.
+So far so good, if we only go by edge weights, Seems as if Tyrion might make it.... my favorite anyhow. Lets reduce our edgelist to this main characters, just to warm up and keep the overview.
 
 ```{r}
 edges.cooc <- edges.cooc.all %>%
@@ -297,7 +296,7 @@ g <- graph_from_data_frame(d = edges.cooc, directed = FALSE)
 g
 ```
 
-Note that this co-occurence network is weighted (number of co-occurence), and undirected
+Note that this co-occurence network is weighted (number of co-occurence), and undirected.
 
 ```{r}
 is_weighted(g)
@@ -318,40 +317,55 @@ gsize(g)
 gorder(g)
 ```
 
-We can give the graph a first plot to see what happens there. It's not pretty, but we will fine-tune it later
+We can give the graph a first plot to see what happens there. It's not pretty, but we will fine-tune it later.
 
 ```{r}
-plot(g)
+plot(g,
+     edge.width = (E(g)$weight / max(E(g)$weight)) * 5  # Only argument we use so far for the weighted edges
+     )
 ```
 
-We already see that some nodes are not connected (isolated), so lets drop them for our network analysis.
+IS really not pretty. But we will work on that later. However, we already see that some nodes are not connected (isolated), so lets drop them for our network analysis. Lets also get rid of edges with super small weight.
 
 ```{r}
-g <- delete_edges(g, E(g)[weight < 20])
-g <- delete_vertices(g, degree(g) == 0)
+g <- delete_edges(g, E(g)[weight < 20]) # How to delete edges in a graph pbject
+g <- delete_vertices(g, degree(g) == 0) # How to delete nodes in a graph pbject
 ```
-
 
 ### Edges
 
-```{r}
-# Find all edges that include "Britt"
-E(g)[[inc('Daenerys Targaryen')]]  
+Lets see a bit which options we have to select edges. We could for example use `inc()` to select only edges that include a certain node.
 
-# Find all pairs that spend 4 or more hours together per week
+**Note:** Almost all edge and many furtehr graph functions to follow, have an argument called `mode`. Here, it doesn't matter, since we ahve an undirected network. In case the edges are directed, we want to specify which mode to consider (`mode = c("all", "out", "in", "total")`). More on that at a later point.
+
+```{r}
+E(g)[[inc("Daenerys Targaryen")]]  
+```
+
+We could also select them due to their characteristics
+
+```{r}
 E(g)[[weight >= 150]]
 ```
 
+Or plot their weight distribution
 
 ```{r}
 hist(E(g)$weight)
 ```
 
+There is muchg more, but lets leave it with that for now.
+
 ### Nodes
 
-lets see who is the most central figure in this network of interactions
+The node level gives us the opportunity to select (in this case) certain characters, their connectivity characteristics, and their enviroment. 
+
+First we look at different measures of degree-centrality, which are a set of measures incicating a certain type of structural importance in the network.
 
 #### Degree centrality
+
+The first one is the degree centralities is the degree centrality, which plainly means how well connected the node is (= Number of Edges). The version for the weighted networks (= Sum of edgeweigths) can be accessed with `strength()`. We can also directly check which node has the maximum degree.
+
 ```{r}
 degree(g) 
 which.max(degree(g))
@@ -360,17 +374,55 @@ strength(g)
 which.max(strength(g))
 ```
 
-### Neighborhood of a Node
+Well, again Tyrion it is...
+
+#### Eigenvector Centrality
+
+Again, the eigenvector. Eigenvector centrality is a very interesting measure. The idea is that nodes are the more important when they are connected to more important nodes. So, if you have cool friends, you are also supposed to be somewhat cooler. You already see, the calculation of such values in a network becomes circular, therefore we need some mathematical magic, which the eigenvector does. We will dig into this concept deeper at another point. We scale it, since these values otherwise tend to become very large. 
+
+**Note:** Here, also a weighted version is available. Again, the `?` is your friend.
+
+```{r}
+eigen_centrality(g, scale = TRUE)$vector %>% round(3)
+```
+
+
+#### Betweenness Centrality
+
+Lastly, the betweenness centrality. That is also an very interesting concept. This one is a measure of how much a node connects otherwise unconnected nodes with each others. This is measured by the amount of **shortest paths** leading through the node.
+
+![](../media/M2_1_shortpath.png){width=250px}
+
+
+
+
+
+
+
+
+
+```{r}
+betweenness(g)
+```
+
+
+#### Neighborhood of a Node
+
+Lastly, we can look at the surrounding of a node, meaning the ones it is connected to, its **neighborhood**.
 
 ```{r}
 neighbors(g, 'Robert Baratheon')
 ```
 
-ego network
+Likewise, we can look at the **ego-network of a node**. That means how many nodes are in a certain **geodesic distance**. Plainly speaking, how many nodes are not more than x-steps away.
+
+![](../media/M2_1_distance.jpg){width=250px}
 
 ```{r}
 ego(g, 2, "Drogo")[[1]]
 ```
+
+We can also not only look at it, but produce a new sub-graph only of this ego-network.
 
 ```{r}
 g.drogo <- make_ego_graph(g, 2, nodes = "Drogo")[[1]]
@@ -382,6 +434,8 @@ plot(g.drogo)
 plot(g.danny)
 ```
 
+Well, Danny seems to be way more connected than her husband, right?
+
 Btw: To merge two graphs, just do:
 
 ```{r}
@@ -390,37 +444,34 @@ g.merge
 ```
 
 
+### (Global) Network structure
+
+Finally, it is often also informative to look at the overal characteristics of the network. We will do this in more detail enxt time, but just so you know:
 
 
-### Betweenness Centrality
-
-```{r}
-betweenness(g)
-```
-
-### Eigenvector Centrality
-
-```{r}
-eigen_centrality(g, scale = TRUE)$vector %>% round(3)
-```
-
-
-### graph structure
-
+The **density** of a measure represents the share of all connected to all possible connections in the network
 
 ```{r}
 edge_density(g)
 ```
 
+**Transistivity**, also called the **Clustering Cefficient** indicates how much the network tends to be locally clustered. That is measured by the share of **closed triplets**. Again,w e will dig into that next time.
 
-```{r}
-diameter(g, directed = F, weights = NA)
-```
+![](../media/M2_1_ccoeff.png){width=250px}
 
 
 ```{r}
 transitivity(g)
 ```
+
+
+The **diameter** is the longest of teh shortest paths between two nodes of the network.
+
+```{r}
+diameter(g, directed = F, weights = NA)
+```
+
+Finally, the **mean distance**, or **average path lenght** represents the mean of all shortest paths between all nodes. It is a measure of diffusion potential within a network.
 
 ```{r}
 mean_distance(g, directed = F)
@@ -431,18 +482,23 @@ Ahh, you saw it comming, right? What about you explore the GoT network a bit on 
 
 
 
-
 # Directed Networks are comming...
 
-So far so good, up to now we considered undirected networks, constructed by the amount characters co-occur. However, as you already might guess, that's not where we stop. 
+So far so good, up to now we considered undirected networks, constructed by the amount characters co-occur. However, as you already might guess, that's not where we stop. SOme general infos on directed networks:
 
-There are also other relationships to which we can, and sometimes have to, assign a directionality. An obvious example here are family ties. Here, I will ose the nicely compiled dataset of the wonderful [Shirin](https://shiring.github.io) that can be found [here](https://github.com/ShirinG/blog_posts_prep/tree/master/GoT). It contains a nodelist with house-affiliations and furtehr characteristics of main characters, and a edgelist of their family relationships.
+* Relations do not necessarily have to be symmetric. Rather, often we find a logical or empirical direction in role based, affective and interactive relationships.
+* Eg. is supervisor of..., gives advice to..., is supplier of..., invests in ...
+* This direction is often crucial for the correct interpretation
+* Introduces new measurements, eg. the differentiation of degrees into out- (sending a tie) and in-degrees (receiving a tie)
 
+An obvious example at the GoT case are family ties. Here, I will ose the nicely compiled dataset of the wonderful [Shirin](https://shiring.github.io) that can be found [here](https://github.com/ShirinG/blog_posts_prep/tree/master/GoT). It contains a nodelist with house-affiliations and furtehr characteristics of main characters, and a edgelist of their family relationships.
+
+## Load the graph
 
 ```{r}
 rm(chars.main, g, g.danny, g.drogo, g.merge)
-edges.fam <- readRDS("../data/GoT/union_edges.RDS")
-nodes.fam <- readRDS("../data/GoT/union_characters.RDS")
+edges.fam <- readRDS("../input/GoT/union_edges.RDS")
+nodes.fam <- readRDS("../input/GoT/union_characters.RDS")
 ```
 
 ```{r}
@@ -450,6 +506,7 @@ head(nodes.fam)
 head(edges.fam)
 ```
 
+Lets construct teh graph. We now also feed in a set of nodes with their characteristics.
 
 ```{r}
 g <- graph_from_data_frame(edges.fam, 
@@ -458,12 +515,17 @@ g <- graph_from_data_frame(edges.fam,
 g
 ```
 
+## Visualizing networks I
+
+How does the plot look?
+
 ```{r}
 plot(g)
 ```
 
+Well, thats some uninformative hairball. Such things often happen when we want to plot large networks. This is a good point to start using the parameters in the `igraph` plotting function. Next time I will introduce you to my current favorite, `ggraph`. However, the `igraph` plotting function is relatively easy to sue. so its worth (if only for the sake of illustration) to tweak through all the parameters to get THE GoT family graph, as pretty as possible.
 
-For plotting the legend, I am summarizing the edge and node colors.
+For plotting the legend, I am summarizing the edge and node colors upfront. You will later see why.
 
 ```{r}
 color_vertices <- nodes.fam %>%
@@ -477,8 +539,7 @@ colors_edges <- edges.fam %>%
   filter(!is.na(color))
 ```
 
-
-
+Ok, we are ready, lets do this plot!
 
 ```{r, fig.width=15, fig.height=15}
 plot(g,
@@ -499,6 +560,9 @@ legend("topleft", legend = c(NA, "Node color:", as.character(color_vertices$hous
 legend("topleft", legend = "", cex = 3, bty = "n", ncol = 1,
        title = "Game of Thrones Family Ties")
 ```
+
+What a beauty! Thanks to Shirin's nice upfront work, it was rather easy to plot it that nicely. However, we could also define our colors as we wished. Here the  [R-Color Palettes](https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/colorPaletteCheatsheet.pdf) might become handy.
+
 
 ## Community Detection
 
