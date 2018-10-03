@@ -153,7 +153,6 @@ edge_list
 Sometimes it is preferable to also create a separate node list. At its simplest, a **node list** is a data frame with a single column - which I will label as "id" - that lists the node IDs found in the edge list. The advantage of creating a separate node list is the ability to add attribute columns to the data frame such as the names of the nodes or any kind of groupings.
 
 ```{r nodelists}
-library(tidyverse)
 node_list <- tibble(id = 1:4, group = sample(letters[1:2], 4, replace = TRUE))
 node_list
 ```
@@ -173,7 +172,7 @@ adj_matrix
 
 To create an `igraph` object from an edge-list data frame we can use the `graph_from_data_frame()` function, which is a bit more straight forward than `network()`. There are three arguments in the `graph_from_data_frame()` function: d, vertices, and directed. Here, d refers to the edge list, vertices to the node list, and directed can be either `TRUE` or `FALSE` depending on whether the data is directed or undirected. By default, `graph.data.frame()` treats the first two columns of the edge list and any remaining columns as edge attributes.
 
-```{r igraph object}
+```{r}
 library(igraph)
 g <- graph_from_data_frame(d = edge_list, vertices = node_list, directed = FALSE)
 g
@@ -201,7 +200,6 @@ plot(g)
 ```
 
 Yeah, that's the graph. We  We can also use the adjacency matrix to create the same graph.
-
 
 ```{r}
 g <- graph_from_adjacency_matrix(adj_matrix, mode = "undirected")
@@ -393,14 +391,6 @@ Lastly, the betweenness centrality. That is also an very interesting concept. Th
 
 ![](../media/M2_1_shortpath.png){width=250px}
 
-
-
-
-
-
-
-
-
 ```{r}
 betweenness(g)
 ```
@@ -520,7 +510,9 @@ g
 How does the plot look?
 
 ```{r}
-plot(g)
+plot(g, 
+     vertex.color = "blue",
+    vertex.shape = "circle")
 ```
 
 Well, thats some uninformative hairball. Such things often happen when we want to plot large networks. This is a good point to start using the parameters in the `igraph` plotting function. Next time I will introduce you to my current favorite, `ggraph`. However, the `igraph` plotting function is relatively easy to sue. so its worth (if only for the sake of illustration) to tweak through all the parameters to get THE GoT family graph, as pretty as possible.
