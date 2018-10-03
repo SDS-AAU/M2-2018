@@ -555,6 +555,7 @@ legend("topleft", legend = "", cex = 3, bty = "n", ncol = 1,
 
 What a beauty! Thanks to Shirin's nice upfront work, it was rather easy to plot it that nicely. However, we could also define our colors as we wished. Here the  [R-Color Palettes](https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/colorPaletteCheatsheet.pdf) might become handy.
 
+In case you want to know more tweaks in network visualization, [Katherine Ognyanov](http://kateto.net/) has a really cool tutorial for [net-viz in igraph](http://kateto.net/network-visualization).
 
 ## Community Detection
 
