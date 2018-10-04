@@ -8,3 +8,9 @@ Some intro text about how great network analysis and NLP is
 * [R Notebook (html - pretty)](https://rawgit.com/SDS-AAU/M2-2018/master/notebooks/M2_1_network_analysis_intro.html)
 * [Jupyter Notebook (on kaggle - executable)](https://kaggle.com/danielhain/sds-2018-m2-1-intro-nw)
 
+## M2-2-3: Advanced Network Analysis
+
+* [R Notebook (rmd - practical)](https://rawgit.com/SDS-AAU/M2-2018/master/notebooks/M2_3_network_analysis_advanced.Rmd)
+* [R Notebook (html - pretty)](https://rawgit.com/SDS-AAU/M2-2018/master/notebooks/M2_3_network_analysis_advanced.html)
+* [Jupyter Notebook (on kaggle - executable)](https://www.kaggle.com/danielhain/sds-2018-m2-3-nw-advanced)
+
