@@ -70,7 +70,7 @@ rm(list.of.packages, new.packages)
 
 ## The Data Structure of Graphs
 
-So, briefly back to the questions: Why all the fuyy with graph objects and the like?
+So, briefly back to the questions: Why all the fuzz with graph objects and the like?
 
 * Tabular data
      * In tabular data, summary statistics of variables are **between observations** (column-wise) interdependent, meaning changing a value of some observation will change the corresponding variables summary statistics.
@@ -80,19 +80,98 @@ So, briefly back to the questions: Why all the fuyy with graph objects and the l
      * Same holds true, but adittional interdependencies due to the relational structure of the data.
      * Sepperation between **node** and **edge** data, which is interdependent. Removing a node might alos impy the removal of edges, removal of edges changes the characteristics of nodes
      * In adittion, the relational structure makes that not only true for adjacent nodes and edges, but potentially multiple. Adding/Removing one node/edge could change the characteristics of every single other node/edge.
-     * That's mainly why graph computing is slightly more messy
+     * That is less of a problem for local network characteristics (eg., a node's degree on level 1). However, many node and edge characteristics such
+     * That's mainly why graph computing is slightly more messy, and need own mathematical tools, and applications from graphical computing (graphical like graph, not like figure)
 
 ![](../media/M2_2_data_structure.png){width=500px}
 
-# Network Structures II
+# Case study: Network Structures II
+
+## Preperation
+
+###  Load the data
+```{r}
+mat.friendship <- fread("../input/socio/ELfriend.dat", data.table = FALSE) 
+mat.advice <- fread("../input/socio/ELadv.dat", data.table = FALSE) 
+mat.work <- fread("../input/socio/ELwork.dat", data.table = FALSE) 
+attributes <- fread("../input/socio/ELattr.dat", data.table = FALSE)
+```
+
+
+The three networks refer to cowork, friendship, and advice. The first 36 respondents are the partners in the firm. 
+
+### Cleaning up
+
+The attribute variables in the file ELattr.dat are:
+
+* seniority status (1=partner; 2=associate)
+* gender (1=man; 2=woman)
+* office (1=Boston; 2=Hartford; 3=Providence)
+* years with the firm
+* age
+* practice (1=litigation; 2=corporate)
+* law school (1: harvard, yale; 2: ucon; 3: other)
+
+
+```{r}
+colnames(attributes) <- c("id", "seniority", "gender", "office", "tenure", "age", "practice", "school")
+   
+attributes %<>%
+  mutate(seniority = recode(seniority, "1" = "Partner", "2" = "Associate"),
+         gender = recode(gender, "1" = "Man", "2" = "Woman"),
+         office = recode(office, "1" = "Boston", "2" = "Hartford", "3" = "Providence"),
+         practice = recode(practice, "1" = "Litigation", "2" = "Corporate"),
+         school = recode(school, "1" = "Harvard, Yale", "2" = "Ucon", "3" = "Others"))   
+    
+head(attributes)
+skim(attributes)
+```
+
+
+### Generate the graph
+
+```{r}
+require(igraph)
+g <- graph_from_adjacency_matrix(mat.friendship, 
+                                 mode = "directed")
+
+V(g)$name <- 1:vcount(g)
+V(g)$gender <- attributes$gender
+V(g)$office <- attributes$office
+V(g)$age <- attributes$age
+V(g)$practice <- attributes$practice
+V(g)$school <- attributes$school
+g 
+```
+
 
 ## Node, Relationships, & Ego-Networks
 
 ### Transistivity
 
+```{r}
+transitivity(g)
+```
+
+
 ### Reciprocity
 
+```{r}
+reciprocity(g)
+```
+
 ### Assortiativity
+
+```{r}
+assortativity.degree(g)
+```
+
+```{r}
+assortativity.degree(g)
+```
+
+
+### Ego-Network structures
 
 
 
@@ -100,7 +179,7 @@ So, briefly back to the questions: Why all the fuyy with graph objects and the l
 
 ## Global Network Structures
 
-
+Small worlds
 
 
 
@@ -593,5 +672,6 @@ summary(netstat,k=15)
 ```
 
 
-
 # Network Visualization II
+
+Ok,lets try some cool stuff
