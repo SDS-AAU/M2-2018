@@ -98,7 +98,3 @@ You are asked to deliver a Computational Notebook (R Markdown, R Notebook, or Ju
 # Hints
 
 * Keep in mind, you are looking in all cases at directed and unweighted networks.
-
-
-
-
