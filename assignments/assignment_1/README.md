@@ -85,10 +85,10 @@ You are asked to deliver a Computational Notebook (R Markdown, R Notebook, or Ju
 
 # Further process and dates
 
-* You will receive an upload link on peergrade.io by Monday (XX.10.2018) morning with concrete instructions.
-* The notebook upload is also due Monday (XX.10.2018), 11:55pm. Delays are not accepted.
-* On latest Wednesday (XX.10.2018), you will recieve an invitation to peergrade your fellows exams on peergrade.io. You will be asked for the evaluation of 3 peer-assignments is part of the assignment and mandatory.
-* The peergrade evaluation is due Friday (XX.10.2018), 11:55pm. Delays are not accepted.
+* You will receive an upload link on peergrade.io by 10.10.2018 morning with concrete instructions.
+* The notebook upload is also due 10.10.2018, 11:55pm. Delays are not accepted.
+* On latest 11.10.2018, you will recieve an invitation to peergrade your fellows exams on peergrade.io. You will be asked for the evaluation of 3 peer-assignments is part of the assignment and mandatory.
+* The peergrade evaluation is due 22.10.2018, 11:55pm. Delays are not accepted.
 
 # Evaluation
 
