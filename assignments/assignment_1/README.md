@@ -4,8 +4,7 @@ Daniel S. Hain (<dsh@business.aau.dk>) & Roman Jurowetzki (<roman@business.aau.d
 
 # Introduction
 
-In your first assignment in M2, you will 
-
+In your first assignment in M2, you will replicate a well known network analysis, with different data and some twists. The data is to be found [HERE](https://github.com/SDS-AAU/M2-2018/tree/master/assignments/assignment_1/data), while starter code again awaits you [HERE](https://github.com/SDS-AAU/M2-2018/tree/master/assignments/assignment_1/starter_code). Good luck!
 # Data: What do I get?
 
 ## Background
