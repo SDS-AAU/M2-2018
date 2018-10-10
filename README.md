@@ -21,3 +21,8 @@ Some intro text about how great network analysis and NLP is
 ## M2 - Assignment 1: Networks
 
 * ['Quick' Python solution attempt](https://colab.research.google.com/drive/1Otx1-IP3P-Hu45_vDmUpA5ybp-enaqXh)
+
+## M2 - 7: NLP language detection, entities and other tricks
+
+* [Colab - hosted notebook](https://colab.research.google.com/drive/1PkggVnjGTOv2cDl9O45TyhT2rX9JN4wY)
+* [Colab - live coding notebook for exercises](https://colab.research.google.com/drive/1poZZ1EtjfiG3qhavvFaiqXaqz6XkrsLf)
