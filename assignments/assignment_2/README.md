@@ -1,5 +1,5 @@
 # Hate-speech and offensive language on Twitter
-## M2 Individual Assignment 2 - Working with Natural Language
+### M2 Individual Assignment 2 - Working with Natural Language
 
 ![hatespeech](http://www.dqweek.com/wp-content/uploads/2017/06/news_firenze-800x550-800x420.jpeg)
 
@@ -31,7 +31,6 @@ The best reported results for this dataset are.
 | 0             |0.61           |
 | 1             |0.91           |
 | 2             |0.95           |
-| ------------- |:-------------:|
 | Overall       |0.91           |
 
 Here advanced NLP feature engineering has been used and thus everything around an overall accuracy of 85 is fine. You will see that it is not easy to lift class 0 accuracy over 0.5
