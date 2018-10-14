@@ -19,9 +19,9 @@ If you are using R, please check out the [Quanteda](https://quanteda.io) package
 ### 2. Explore and compare the 2 "classes of interest" - hate speech vs offensive language. 
 
 - Can you see differences by using simple count-based approaches? 
-- Can you identify themes (aka clusters) that are specific for one class or another?
+- Can you identify themes (aka clusters) that are specific for one class or another? Explore them using e.g. within-cluster top TF-IDF terms.
 
-### Build a ML model that can predict hate speech
+### 3. Build a ML model that can predict hate speech
 Use the ML pipeline (learned in M1) to build a classification model that can identify offensive language and hate speech. It is not an easy task to get good results. Experiment with different 
 
 The best reported results for this dataset are.
@@ -34,3 +34,5 @@ The best reported results for this dataset are.
 | Overall       |0.91           |
 
 Here advanced NLP feature engineering has been used and thus everything around an overall accuracy of 85 is fine. You will see that it is not easy to lift class 0 accuracy over 0.5
+
+Good Luck!
