@@ -26,3 +26,7 @@ Some intro text about how great network analysis and NLP is
 
 * [Colab - hosted notebook](https://colab.research.google.com/drive/1PkggVnjGTOv2cDl9O45TyhT2rX9JN4wY)
 * [Colab - live coding notebook for exercises](https://colab.research.google.com/drive/1poZZ1EtjfiG3qhavvFaiqXaqz6XkrsLf)
+
+## M2 - NLP: Last session
+
+* [Colab - hosted notebook - Intro to Spacy](https://colab.research.google.com/drive/1xtFnU-r6NEKjQ3AAmhNc6Tw60jfqlxAs)
