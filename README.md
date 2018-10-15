@@ -2,6 +2,14 @@
 
 Some intro text about how great network analysis and NLP is
 
+## Papers and resources
+
+* Check out the work by  
+[Kiran Garimella](https://scholar.google.com/citations?user=PH96F4oAAAAJ&hl=en#) as well as others in the Computational Social Science and Social Informatics community.
+
+* More will come soon...
+
+
 ## M2-1-2: Introduction to Network Analysis
 
 * [R Notebook (rmd - practical)](https://rawgit.com/SDS-AAU/M2-2018/master/notebooks/M2_1_network_analysis_intro.Rmd)
